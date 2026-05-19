@@ -37,10 +37,11 @@ Instead of manual registers, sheets, or tedious copy-pasting, **Attendence** wor
 * **`[⚡ Instant]` Welcome Gate:** An elegant, single-step onboarding gateway featuring high-fidelity animations that transition users instantly into the application, completely removing long multi-step tutorials.
 * **`[👑 Admin]` Principal Dashboard:** The administrative hub allowing management of teacher access, school subscription tiers, holiday schedules, database status, and school-wide analytics.
 * **`[🧑‍🏫 Staff]` Teacher Dashboard:** A high-speed, uncluttered environment designed strictly for class coordination, student roster lookup, quick attendance marking, and automated report dispatching.
+* **`[⚙️ Precision]` Seamless Navigation UX:** Polished, distraction-free app navigation where bottom bars gracefully collapse when entering deep menus (like Settings), paired with standard native back-stack routing.
 
 ### 👥 Robust Class & Student Registry
 * **`[🏫 Streamlined]` Dynamic Class Allocation:** Create classrooms, assign division streams, and populate them with detailed student profiles (including Roll Number, Name, Parent Name, and Phone Number).
-* **`[🎓 Leadership]` Class Representative (CR) System:** Designate specific students as Class Representatives to assist teachers in organizing daily class operations.
+* **`[🎓 Leadership]` Class Representative (CR) System:** Designate specific students as Class Representatives to assist teachers in organizing daily class operations. CRs are highlighted with dynamic visual badges and specialized scoring mechanisms embedded directly into the attendance matrix.
 * **`[👁️ Privacy]` Granular Class Visibility:** Principals can set class rosters as viewable by *"All Teachers"*, *"None"*, or manually allocate classes to *"Selected Teachers"* to secure student privacy.
 
 ### 🔒 Smart Attendance Gating & Locks
@@ -48,6 +49,7 @@ Instead of manual registers, sheets, or tedious copy-pasting, **Attendence** wor
 * **`[🔒 Immutable]` Global Attendance Edit Lock:** Principals can toggle an administrative lock on historical attendance logs, preventing teachers from editing past records.
 * **`[📅 Intelligent]` Smart Holiday Management:** 
   * Principals can schedule school-wide holidays on the central calendar.
+  * **Custom Aesthetic Integration:** When creating a holiday, administrators can select custom pastel color themes that automatically tint the daily view banners and highlight full columns in the monthly matrix.
   * Teachers are instantly shown a prominent warning banner on holiday dates.
   * Interactive attendance marking is automatically disabled during holidays to enforce data integrity.
 
