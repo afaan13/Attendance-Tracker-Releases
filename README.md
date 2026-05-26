@@ -24,49 +24,81 @@
 
 Instead of manual registers, sheets, or tedious copy-pasting, **Attendence** works as an automated ecosystem:
 1. **`[👑 Admin]` The Principal Sets Up the School:** The Principal registers the school in the app, generating a secure **Invite Code**.
-2. **`[🧑‍🏫 Staff]` Teachers Join the Network:** Teachers register using this Invite Code. Once the Principal approves them, they gain instant access to class rosters based on administrative policies.
+2. **`[🧑‍🏫 Staff]` Teachers Join the Network:** Teachers register using this Invite Code. Once approved by the Principal, they gain instant access to class rosters based on administrative policies.
 3. **`[⚡ Fast]` Attendance is Marked in Seconds:** Teachers open their customized dashboard, select a class, and mark attendance (Present, Absent, Late, or on Leave) with one-tap efficiency.
 4. **`[💾 Offline]` Data Syncs Silently:** The app is **offline-first**. It works perfectly inside classrooms with poor cell reception. As soon as the device connects to the internet, it silently syncs the data to the cloud.
 5. **`[🤖 Robot]` Parents Get Instant Automated Updates:** The app generates gorgeous, professional PDF reports on-device and dispatches them directly to parents' WhatsApp or WhatsApp Business numbers automatically, removing all manual effort from the teacher's day.
 
 ---
 
-## 💎 Features & Capabilities (Start-to-End Walkthrough) 🌟🛠️
+## 💎 Core Features & Engineering Foundations 🌟🛠️
 
-### 🎭 Unified Role-Based Portals
-* **`[⚡ Instant]` Welcome Gate:** An elegant, single-step onboarding gateway featuring high-fidelity animations that transition users instantly into the application, completely removing long multi-step tutorials.
-* **`[👑 Admin]` Principal Dashboard:** The administrative hub allowing management of teacher access, school subscription tiers, holiday schedules, database status, and school-wide analytics.
-* **`[🧑‍🏫 Staff]` Teacher Dashboard:** A high-speed, uncluttered environment designed strictly for class coordination, student roster lookup, quick attendance marking, and automated report dispatching.
-* **`[⚙️ Precision]` Seamless Navigation UX:** Polished, distraction-free app navigation where bottom bars gracefully collapse when entering deep menus (like Settings), paired with standard native back-stack routing.
+### 🛡️ Enterprise-Grade Activity & Audit Logging
+To ensure maximum accountability, transparency, and operational clarity across the entire school staff, the application includes a comprehensive **real-time logging framework**.
+* **Dual-Layer Storage Architecture:**
+  * **Local Room Database Cache:** Persists logs on-device so teachers' actions are registered even when offline. Background routines automatically prune the log space to `MAX_LOGS_TO_KEEP = 1000` to prevent local storage bloat.
+  * **Cloud Firestore Sync:** When connected, logs are instantly published to Firestore under the school collection (`/schools/{schoolId}/audit_logs/{logId}`).
+* **High-Context Metadata Payloads:** Each logged event records:
+  * **Traceability:** Level (`INFO`, `SUCCESS`, `WARNING`, `ERROR`, `USER_ACTION`) and Category (`AUTH`, `SYNC`, `ATTENDANCE`, `CLASS`, `STUDENT`, `SYSTEM`, `BACKUP`).
+  * **Event Translation:** Natural, human-readable statements translating complex system state transitions for administrative understanding.
+  * **User & Device Identity:** Captures the performing teacher's Name, Email, and UID, alongside detailed hardware metrics (`Build.MANUFACTURER`, `Build.MODEL`, and Android version) for hardware forensic auditing.
+* **Interactive Administrative Portal:** A custom screen accessible by the Principal with advanced text filtering (search queries matching message contents or internal stack traces), categories, level tags, CSV log exporting, and a safe Room database purging suite.
+
+### 💳 Tiered Subscription Ecosystem & Data Preservation
+The application implements a structured, premium billing system with pricing options tailored to school sizes. It supports **four flexible billing durations** (1 Month, 3 Months, 6 Months, 1 Year) with increasing discount rates to offset cloud storage, firestore reads/writes, and server maintenance costs:
+* **`[🆓 Free]` Core Attendance Utilities:** Limited to 3 classes, 20 students per class, and basic local operations.
+* **`[💎 Premium]` Scale-Up Package (For Departments & Small Schools):** Up to 10 classes, 60 students per class, 5 teachers, batch report exports, and custom initials changes.
+  * *Pricing Structure:* 1 Month (₹200) | 3 Months (₹549 - Save ~9%) | 6 Months (₹999 - Save ~17%) | 1 Year (₹1799 - Save ~25%)
+* **`[👑 Elite]` Advanced Institutional Suite (For Growing Schools):** Up to 30 classes, 100 students per class, 15 teachers, custom school logo integration, and advanced security configurations.
+  * *Pricing Structure:* 1 Month (₹600) | 3 Months (₹1649 - Save ~8%) | 6 Months (₹2999 - Save ~17%) | 1 Year (₹5499 - Save ~24%)
+* **`[🌌 Ultimate]` Absolute Capacity (For Large Organizations):** Unlimited classes, students, and teachers, priority Firestore syncing, and direct developer assistance.
+  * *Pricing Structure:* 1 Month (₹1200) | 3 Months (₹3299 - Save ~8%) | 6 Months (₹5999 - Save ~17%) | 1 Year (₹10999 - Save ~24%)
+
+#### ⏰ Subscription Warning & Grace Period Protections
+To prevent immediate lockouts and safeguard essential records:
+* **7-Day Pre-Expiry Warn Banners:** Starting 7 days before subscription end, the Principal's dashboard highlights a yellow warning banner, accompanied by local push notifications for proactive renewal.
+* **Non-Destructive Free Downgrade:** Upon subscription expiry, the account shifts to the *Free Plan*. **Importantly, no user data (classes, students, attendance history) is deleted or modified.** All local and cloud records are carefully preserved.
+* **Grace Period Warning Card:** An alert card remains active on the settings/billing page. The user is notified that their records are kept intact for a grace period. If they choose to remain on the free plan, they must scale their active usage down to the free tier limits (e.g. deleting excess classes) or renew their plan before the grace period ends, after which excess cloud resources are automatically purged to release cloud storage allocations.
+* **Billing System Integration:** Users checkout using a secure Google Play mockup Sandbox purchase sheet simulating Credit Cards, UPI, and Google Pay, writing transactional states instantly to Cloud Firestore. Refer to [play_billing_setup_guide.md](file:///C:/Users/Afaan/.gemini/antigravity-ide/brain/c3a8468a-3424-4e71-aa1c-cdfd680d0df3/play_billing_setup_guide.md) for Google Play Console integration instructions.
+
+### 🎭 4-Tier Teacher Permissions & Authorization Matrix
+To enforce professional administrative standards, the application implements a strict **4-Tier security model** that dynamically alters the UI visibility, bottom navigation tabs, settings options, and route accessibility based on the logged-in teacher's role:
+* **`[🧑‍🏫 Standard]` Standard Teacher:** Scope is strictly confined to taking and marking attendance. 
+  * **Complete Redirection & Isolation:** The *Principal Dashboard* bottom navigation tab and the *School Access* (invite code) settings menu are completely hidden. If a Standard teacher attempts to deep-link or navigate directly to restricted pages, an automated navigation interceptor immediately reroutes them back to the Day View screen.
+* **`[⚡ Admin]` Admin Teacher:** Intermediate operational access.
+  * **Capability:** Can take attendance, add new student profiles to rosters, and edit student profile details.
+  * **Restriction:** Strictly prohibited from deleting students.
+* **`[🔥 Incharge]` Incharge Teacher:** High-level supervisor class permissions.
+  * **Capability:** Inherits all Admin capabilities. Can also add and delete students directly inside the **Manage Classes** roster view.
+  * **Control:** Granted access to configure and adjust the *Monthly Score Limit* via the class settings menu.
+* **`[👑 Principal]` Principal (The Boss):** Master administrative control.
+  * **Capability:** Holds complete oversight of school operations, including approval of registered staff, database backups/restores, central holiday scheduling, and comprehensive audit logs.
+  * **Accidental Deletion Safeguard:** To prevent accidental deletion of students from the analytical screens, the Principal Dashboard's master student registry completely hides student delete options. Student deletion is exclusively allowed within the permitted teacher's **Manage Students / Class Roster** view.
 
 ### 👥 Robust Class & Student Registry
 * **`[🏫 Streamlined]` Dynamic Class Allocation:** Create classrooms, assign division streams, and populate them with detailed student profiles (including Roll Number, Name, Parent Name, and Phone Number).
 * **`[🎓 Leadership]` Class Representative (CR) System:** Designate specific students as Class Representatives to assist teachers in organizing daily class operations. CRs are highlighted with dynamic visual badges and specialized scoring mechanisms embedded directly into the attendance matrix.
-* **`[👁️ Privacy]` Granular Class Visibility:** Principals can set class rosters as viewable by *"All Teachers"*, *"None"*, or manually allocate classes to *"Selected Teachers"* to secure student privacy.
+* **`[👁️ Privacy]` Granular Class Visibility System:** Principals have full control over which teachers can view and access each class through:
+  * **School-Wide Visibility Modes:** Toggle between OPEN (all teachers can see all classes) and RESTRICTED (per-teacher permissions apply) from the Principal Dashboard.
+  * **Per-Teacher Class Access:** Long-press any class, enter the Access section, and toggle individual teacher permissions including "Can View Class," "Can Take Attendance," "Can Sync," and "Can Generate Reports."
+  * **Time-Window Scheduling:** Set allowed access hours (start/end time) per teacher per class — teachers only see the class during their designated time window.
+  * **Real-Time Enforcement:** When a principal revokes a teacher's "Can View" permission, the class immediately disappears from the teacher's Manage Classes section, even if it was previously synced to local storage.
+  * **Principal-Only Deletion:** Class deletion is restricted exclusively to principals, preventing accidental removal by administrators.
+  * **Access Policy Presets:** Four one-tap policy toggles (Everyone, Academic Staff Only, Hidden, Limited Access) allow quick batch permission configuration per class.
+* **`[📝 Professional]` Premium Serif Name Typography:** All student names across the main attendance logs, details summary dialogs, and statistics grids are rendered using high-fidelity `FontFamily.Serif` typography to deliver a formal, elegant, and highly attractive visual representation.
+* **`[📊 Real-Time]` Today's Roster Stats Calculations:**
+  * Displays a dual-line card format: Student Count on Line 1 and real-time attendance stats `"Today: P:X, A:Y, L:Z"` on Line 2 immediately after attendance is completed (even partially).
+  * Computes stats dynamically by querying and matching the Room database status entries against absolute case-insensitive matches (`Present`, `Absent`, `Leave`), completely resolving old `0` calculation errors.
 
-### 🔒 Smart Attendance Gating & Locks
-* **`[⏱️ Rapid]` Interactive Day View:** Rapid single-tap toggling to mark students as **Present**, **Absent**, **Late**, or **Leave**.
-* **`[🔒 Immutable]` Global Attendance Edit Lock:** Principals can toggle an administrative lock on historical attendance logs, preventing teachers from editing past records.
-* **`[📅 Intelligent]` Smart Holiday Management:** 
-  * Principals can schedule school-wide holidays on the central calendar.
-  * **Custom Aesthetic Integration:** When creating a holiday, administrators can select custom pastel color themes that automatically tint the daily view banners and highlight full columns in the monthly matrix.
-  * Teachers are instantly shown a prominent warning banner on holiday dates.
-  * Interactive attendance marking is automatically disabled during holidays to enforce data integrity.
+### 📅 Smart Holiday Calendar & Display Gating
+* **Perfect Multi-Device Month Grids:** The holiday calendar month grid uses responsive layout constraints to guarantee that all calendar cells, headers, and navigation keys fit perfectly on any Android screen size (from compact devices to large tablets) without clipping or partial-cell alignments.
+* **Interactive Theme Coloring:** Administrators can select custom aesthetic pastel tones when creating new school holidays, which colorize calendar highlight marks, monthly grids, and daily attendance banners.
+* **Immutable Attendance Locks:** Active attendance marking is automatically disabled on designated holiday dates, and a beautiful, high-visibility warning banner alerts teachers that school is closed, preserving data integrity.
 
 ### 🔄 Advanced Cloud-Caching & Synchronization
 * **`[💾 Offline-First]` SQLite (Room DB) Caching:** Local SQLite storage guarantees flawless operations even in completely offline environments.
 * **`[📡 Demand-Sync]` Adaptive Data Dispatch:** Replaced heavy, continuous listeners with smart, manual, and delta-based sync actions to conserve battery, reduce data consumption, and minimize Firebase Firestore read/write quota usage.
 * **`[⚔️ Safe-Merge]` Conflict Resolution Engine:** Robust transaction management prevents offline changes from overriding administrative locks or newer server-side edits.
-
-### 📄 Automated PDF Report Generation & Batch Dispatch
-* **`[📄 Vector-PDF]` High-Resolution Report Compilation:** Generate weekly, monthly, or customized range-based attendance reports directly on the device as beautifully styled PDFs.
-* **`[🤖 Auto-Click]` Intelligent WhatsApp Dispatcher:** Load queues of parent phone numbers and automatically deliver the corresponding PDF files via WhatsApp or WhatsApp Business.
-
-### 💎 Tiered Subscription Ecosystem (Elite Plans)
-* **`[🆓 Free]` Core Attendance Utilities:** Core features, basic class sizes, and manual backup utilities.
-* **`[💎 Premium]` Scale-Up Package:** Dynamic allocation of up to 30 classes and 200 students per class, and custom teacher restriction overrides.
-* **`[👑 Elite]` Advanced Calendars & Restrictions:** 2x capacity of Premium, advanced administrative rules, and school-wide holiday management.
-* **`[🌌 Ultimate]` Absolute Limits & Priority Sync:** Complete school scaling with unlimited rosters, priority Firestore syncing, and granular teacher policy enforcement.
 
 ---
 
