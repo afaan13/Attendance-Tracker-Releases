@@ -84,7 +84,30 @@
   1. *Silent Tracking:* Every administrative event, backup, or attendance entry is silently logged locally with high-context hardware and user metadata.
   2. *Principal Inspect:* The Principal opens the master logs screen to search, filter by severity levels (INFO, SUCCESS, ERROR), review device details, and export full logs to CSV.
 
+### 🔒 7. Attendance Overwrite Protection & Instant Role Sync
+* **How to use:**
+  1. *Attendance Lock:* Once attendance has been taken and synced by a teacher for a class, it is protected. Other teachers cannot overwrite this record on the go.
+  2. *Instant Sync:* Teacher role updates (promotions/demotions between Standard and Admin) sync in real-time, immediately enforcing the correct permissions.
+
+### 🗑️ 8. Recycle Bin & Restoration Safeguards
+* **How to use:**
+  1. *Soft Deletion:* Students or classes deleted from the roster are moved to the Recycle Bin.
+  2. *Safe Restoration:* Restoring a student recovers all of their properties, attributes, and original placements inside their class. The restoration heals local databases and syncs correctly to the cloud.
+
+### 👁️‍🗨️ 9. Settings: Hide Marks & Ranks Privacy Toggle
+* **How to use:**
+  1. *Activate:* Go to Settings and toggle the offline **Hide Marks & Ranks** switch.
+  2. *Privacy Mode:* When turned on, student ranks, trophy icons, the detailed Points Statement ledger, and the Monthly Performance section are hidden from views (like Daily and Monthly tabs or Student Details).
+  3. *Uninterrupted CR Tasks:* The Class Representative (CR) management system remains fully active—teachers can still view CR indicators, assign CR duties, and modify CR scores.
+
+### 🔐 10. Unified Access Control Dashboard & Live Status Icons
+* **How to use:**
+  1. *Single settings dashboard:* View and configure class-level and staff-level permissions from one unified page. Use high-density, slim list rows designed for fast readability.
+  2. *Revoke & Hide on the go:* Instantly toggle "Revoke (Hide) All" to restrict a teacher from seeing any classes, or hide specific classes immediately. Role promotions and demotions update in real-time.
+  3. *Live Access Icons:* Look at the classes list screen. Each class card displays a small indicator next to the class name: a green open lock (`Icons.Default.LockOpen`) indicates active write access, while a red closed lock (`Icons.Default.Lock`) indicates access is restricted.
+
 ---
+
 
 ## 📦 Distribution & Privacy Notice
 
