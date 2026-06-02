@@ -1,4 +1,4 @@
-# 📱 Attendence — Elite School Management Ecosystem 🚀
+# 📱 Attendence — Elite School Management Ecosystem
 
 <div align="center">
   <p>
